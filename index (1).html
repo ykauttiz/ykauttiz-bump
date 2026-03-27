@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>yKauttizBump — Auto Bump Bot v3.0.0</title>
+<meta name="description" content="Bot de bump automático para Discord. Multi-conta, multi-bot, jitter gaussiano, webhook, logs. v3.0.0 STABLE."/>
+<meta property="og:title" content="yKauttizBump v3.0.0"/>
+<meta property="og:description" content="Auto Bump Bot para Discord — pago, estável, multi-conta."/>
+<meta property="og:type" content="website"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;700;800&display=swap" rel="stylesheet"/>
+<style>
+/* ── Reset & Variables ─────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:       #080b10;
+  --bg2:      #0d1117;
+  --bg3:      #111820;
+  --border:   #1e2a38;
+  --border2:  #243040;
+  --green:    #3ddc84;
+  --green2:   #57F287;
+  --red:      #ED4245;
+  --blue:     #5865F2;
+  --cyan:     #00d4ff;
+  --yellow:   #FEE75C;
+  --text:     #c9d1d9;
+  --text2:    #8b949e;
+  --text3:    #4a5568;
+  --white:    #f0f6fc;
+  --mono:     'Space Mono', monospace;
+  --sans:     'Syne', sans-serif;
+  --glow-g:   0 0 24px rgba(61,220,132,.25);
+  --glow-b:   0 0 24px rgba(88,101,242,.25);
+  --glow-c:   0 0 24px rgba(0,212,255,.2);
+  --radius:   6px;
+}
+
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--mono);font-size:14px;line-height:1.6;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+img{max-width:100%}
+
+/* ── Scrollbar ─────────────────────────────────────────── */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+
+/* ── Noise overlay ─────────────────────────────────────── */
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  opacity:.028;pointer-events:none;z-index:0;
+}
+
+/* ── Ticker ────────────────────────────────────────────── */
+.ticker{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  background:var(--green);color:#000;
+  font-family:var(--mono);font-size:11px;font-weight:700;
+  overflow:hidden;height:26px;display:flex;align-items:center;
+}
+.ticker-inner{
+  display:flex;gap:0;white-space:nowrap;
+  animation:ticker-scroll 32s linear infinite;
+}
+.ticker-inner span{padding:0 32px}
+.ticker-inner span::after{content:'·';padding-left:32px;opacity:.5}
+@keyframes ticker-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ── Nav ───────────────────────────────────────────────── */
+nav{
+  position:fixed;top:26px;left:0;right:0;z-index:99;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 40px;height:56px;
+  background:rgba(8,11,16,.85);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+}
+.nav-logo{
+  font-family:var(--sans);font-size:18px;font-weight:800;
+  color:var(--white);letter-spacing:-.02em;
+  display:flex;align-items:center;gap:10px;
+}
+.nav-logo .dot{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse-dot 2s ease-in-out infinite}
+@keyframes pulse-dot{0%,100%{box-shadow:0 0 0 0 rgba(61,220,132,.6)}50%{box-shadow:0 0 0 6px rgba(61,220,132,0)}}
+.nav-links{display:flex;gap:32px;align-items:center}
+.nav-links a{font-size:12px;color:var(--text2);letter-spacing:.05em;text-transform:uppercase;transition:color .2s}
+.nav-links a:hover{color:var(--green)}
+.nav-cta{
+  font-family:var(--sans);font-size:12px;font-weight:700;
+  background:var(--green);color:#000;
+  padding:6px 16px;border-radius:var(--radius);
+  transition:opacity .2s,transform .15s;letter-spacing:.02em;
+}
+.nav-cta:hover{opacity:.88;transform:translateY(-1px)}
+
+/* ── Layout ────────────────────────────────────────────── */
+.container{max-width:1100px;margin:0 auto;padding:0 40px}
+section{position:relative;z-index:1}
+
+/* ── Hero ──────────────────────────────────────────────── */
+#hero{
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding-top:82px;text-align:center;
+  background:radial-gradient(ellipse 70% 50% at 50% 60%, rgba(61,220,132,.06) 0%, transparent 70%);
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  border:1px solid var(--border2);border-radius:20px;
+  padding:5px 14px;font-size:11px;color:var(--text2);
+  margin-bottom:32px;letter-spacing:.08em;text-transform:uppercase;
+}
+.hero-badge .live{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse-dot 2s infinite}
+.hero-title{
+  font-family:var(--sans);font-size:clamp(48px,8vw,88px);
+  font-weight:800;line-height:1.0;letter-spacing:-.04em;
+  color:var(--white);margin-bottom:8px;
+}
+.hero-title .accent{color:var(--green)}
+.hero-sub{
+  font-family:var(--sans);font-size:clamp(20px,3vw,32px);
+  font-weight:400;color:var(--text2);letter-spacing:-.01em;
+  margin-bottom:24px;
+}
+.hero-desc{
+  max-width:560px;margin:0 auto 40px;
+  font-size:13px;color:var(--text2);line-height:1.8;
+}
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:64px}
+.btn-primary{
+  font-family:var(--sans);font-weight:700;font-size:14px;
+  background:var(--green);color:#000;
+  padding:12px 28px;border-radius:var(--radius);
+  transition:opacity .2s,transform .15s,box-shadow .2s;
+  letter-spacing:.01em;
+}
+.btn-primary:hover{opacity:.9;transform:translateY(-2px);box-shadow:var(--glow-g)}
+.btn-ghost{
+  font-family:var(--sans);font-weight:700;font-size:14px;
+  border:1px solid var(--border2);color:var(--text);
+  padding:12px 28px;border-radius:var(--radius);
+  transition:border-color .2s,color .2s,transform .15s;
+  letter-spacing:.01em;
+}
+.btn-ghost:hover{border-color:var(--green);color:var(--green);transform:translateY(-2px)}
+.hero-badges{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.badge{
+  font-size:10px;letter-spacing:.08em;text-transform:uppercase;
+  border:1px solid var(--border);border-radius:4px;
+  padding:4px 10px;color:var(--text3);
+}
+.badge.green{border-color:rgba(61,220,132,.3);color:var(--green)}
+.badge.red{border-color:rgba(237,66,69,.3);color:var(--red)}
+.badge.blue{border-color:rgba(88,101,242,.3);color:var(--blue)}
+
+/* ── Terminal mockup ───────────────────────────────────── */
+.terminal-wrap{
+  max-width:720px;margin:0 auto 80px;
+  border:1px solid var(--border2);border-radius:10px;
+  overflow:hidden;background:var(--bg2);
+  box-shadow:0 32px 80px rgba(0,0,0,.6),var(--glow-g);
+}
+.term-bar{
+  display:flex;align-items:center;gap:8px;
+  padding:12px 16px;background:var(--bg3);border-bottom:1px solid var(--border);
+}
+.term-dot{width:12px;height:12px;border-radius:50%}
+.term-dot.r{background:#FF5F57}
+.term-dot.y{background:#FFBD2E}
+.term-dot.g{background:#28CA41}
+.term-title{flex:1;text-align:center;font-size:11px;color:var(--text3);letter-spacing:.06em}
+.term-body{padding:20px 24px;font-size:12px;line-height:2;overflow-x:auto}
+.t-dim{color:var(--text3)}
+.t-cyan{color:var(--cyan)}
+.t-green{color:var(--green)}
+.t-yellow{color:var(--yellow)}
+.t-red{color:var(--red)}
+.t-blue{color:var(--blue)}
+.t-white{color:var(--white)}
+.t-bold{font-weight:700}
+.cursor{display:inline-block;width:8px;height:14px;background:var(--green);vertical-align:middle;animation:blink .9s step-end infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* ── Section titles ────────────────────────────────────── */
+.sec-label{
+  font-size:10px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--green);margin-bottom:12px;
+  display:flex;align-items:center;gap:10px;
+}
+.sec-label::before{content:'';flex:0 0 28px;height:1px;background:var(--green);opacity:.5}
+.sec-title{
+  font-family:var(--sans);font-size:clamp(28px,4vw,48px);
+  font-weight:800;color:var(--white);letter-spacing:-.03em;
+  line-height:1.1;margin-bottom:16px;
+}
+.sec-desc{font-size:13px;color:var(--text2);max-width:520px;line-height:1.8;margin-bottom:56px}
+
+/* ── Features grid ─────────────────────────────────────── */
+#features{padding:100px 0}
+.features-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1px;
+  border:1px solid var(--border);border-radius:10px;overflow:hidden;
+}
+.feat-card{
+  padding:32px;background:var(--bg2);
+  transition:background .2s;
+  position:relative;overflow:hidden;
+}
+.feat-card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(61,220,132,.04) 0%,transparent 60%);
+  opacity:0;transition:opacity .3s;
+}
+.feat-card:hover{background:var(--bg3)}
+.feat-card:hover::before{opacity:1}
+.feat-icon{
+  font-size:28px;margin-bottom:16px;display:block;
+  filter:drop-shadow(0 0 8px rgba(61,220,132,.3));
+}
+.feat-title{
+  font-family:var(--sans);font-weight:700;font-size:16px;
+  color:var(--white);margin-bottom:8px;letter-spacing:-.01em;
+}
+.feat-desc{font-size:12px;color:var(--text2);line-height:1.7}
+
+/* ── Bots table ────────────────────────────────────────── */
+#bots{padding:100px 0;background:linear-gradient(180deg,transparent,rgba(88,101,242,.04),transparent)}
+.bots-table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;border:1px solid var(--border);border-radius:10px;overflow:hidden}
+thead{background:var(--bg3)}
+th{padding:14px 20px;text-align:left;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);font-weight:700;border-bottom:1px solid var(--border)}
+td{padding:16px 20px;font-size:13px;color:var(--text);border-bottom:1px solid var(--border)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,255,255,.02)}
+.tag{
+  display:inline-block;font-size:10px;padding:3px 9px;border-radius:4px;
+  letter-spacing:.05em;font-weight:700;
+}
+.tag.stable{background:rgba(61,220,132,.15);color:var(--green);border:1px solid rgba(61,220,132,.25)}
+.tag.beta{background:rgba(254,231,92,.1);color:var(--yellow);border:1px solid rgba(254,231,92,.2)}
+.mono-text{font-family:var(--mono);font-size:11px;color:var(--text3)}
+
+/* ── Config section ────────────────────────────────────── */
+#config{padding:100px 0}
+.config-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+.config-block{
+  border:1px solid var(--border);border-radius:10px;
+  overflow:hidden;background:var(--bg2);
+}
+.config-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 20px;background:var(--bg3);border-bottom:1px solid var(--border);
+}
+.config-filename{font-size:11px;color:var(--text2);letter-spacing:.04em}
+.copy-btn{
+  font-size:10px;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--text3);cursor:pointer;padding:4px 10px;border-radius:4px;
+  border:1px solid var(--border);background:none;font-family:var(--mono);
+  transition:color .2s,border-color .2s;
+}
+.copy-btn:hover{color:var(--green);border-color:var(--green)}
+.copy-btn.copied{color:var(--green);border-color:var(--green)}
+pre{padding:24px;font-size:11.5px;line-height:1.9;overflow-x:auto;white-space:pre}
+.kw{color:var(--yellow)}
+.str{color:var(--green)}
+.num{color:var(--cyan)}
+.cm{color:var(--text3);font-style:italic}
+.key{color:var(--blue)}
+
+/* ── Env table ─────────────────────────────────────────── */
+.env-table{border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.env-row{display:grid;grid-template-columns:220px 100px 1fr;border-bottom:1px solid var(--border)}
+.env-row:last-child{border-bottom:none}
+.env-row:hover{background:rgba(255,255,255,.02)}
+.env-cell{padding:12px 16px;font-size:12px;align-self:center}
+.env-cell:first-child{font-family:var(--mono);font-size:11px;color:var(--cyan)}
+.env-cell.default{color:var(--text3);font-family:var(--mono);font-size:11px}
+.env-cell.desc{color:var(--text2)}
+.env-header .env-cell{
+  font-size:10px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--text3);font-weight:700;font-family:var(--mono);
+  background:var(--bg3);border-bottom:1px solid var(--border);
+}
+
+/* ── How to ────────────────────────────────────────────── */
+#howto{padding:100px 0;background:linear-gradient(180deg,transparent,rgba(61,220,132,.03),transparent)}
+.steps{display:flex;flex-direction:column;gap:0}
+.step{
+  display:grid;grid-template-columns:60px 1fr;gap:0;
+  position:relative;
+}
+.step-num-col{display:flex;flex-direction:column;align-items:center;gap:0}
+.step-num{
+  width:40px;height:40px;border-radius:50%;
+  border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--sans);font-weight:800;font-size:13px;color:var(--text2);
+  background:var(--bg2);flex-shrink:0;z-index:1;
+  transition:border-color .3s,color .3s;
+}
+.step:hover .step-num{border-color:var(--green);color:var(--green)}
+.step-line{flex:1;width:1px;background:var(--border);margin:4px 0}
+.step:last-child .step-line{display:none}
+.step-body{padding:0 0 48px 24px}
+.step-title{
+  font-family:var(--sans);font-weight:700;font-size:18px;
+  color:var(--white);letter-spacing:-.02em;margin-bottom:8px;margin-top:8px;
+}
+.step-desc{font-size:12px;color:var(--text2);line-height:1.8;margin-bottom:12px}
+.step-code{
+  background:var(--bg3);border:1px solid var(--border);border-radius:6px;
+  padding:14px 18px;font-size:12px;color:var(--text2);
+  overflow-x:auto;line-height:1.8;
+}
+
+/* ── Stats / Numbers ───────────────────────────────────── */
+#numbers{padding:80px 0;text-align:center}
+.numbers-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:80px}
+.num-card{
+  padding:40px 20px;background:var(--bg2);
+  position:relative;overflow:hidden;
+}
+.num-card::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--green),transparent);
+  opacity:0;transition:opacity .3s;
+}
+.num-card:hover::after{opacity:1}
+.num-value{
+  font-family:var(--sans);font-size:52px;font-weight:800;
+  color:var(--white);letter-spacing:-.04em;line-height:1;
+  margin-bottom:8px;
+}
+.num-value.green{color:var(--green)}
+.num-value.blue{color:var(--blue)}
+.num-value.cyan{color:var(--cyan)}
+.num-label{font-size:11px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase}
+
+/* ── FAQ ───────────────────────────────────────────────── */
+#faq{padding:100px 0}
+.faq-list{max-width:720px}
+.faq-item{border-bottom:1px solid var(--border)}
+.faq-q{
+  width:100%;text-align:left;background:none;border:none;
+  padding:20px 0;cursor:pointer;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  font-family:var(--sans);font-size:16px;font-weight:700;
+  color:var(--white);letter-spacing:-.01em;
+  transition:color .2s;
+}
+.faq-q:hover{color:var(--green)}
+.faq-q .faq-icon{
+  flex-shrink:0;width:20px;height:20px;border-radius:50%;
+  border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;color:var(--text3);transition:all .25s;
+}
+.faq-item.open .faq-q .faq-icon{border-color:var(--green);color:var(--green);transform:rotate(45deg)}
+.faq-a{
+  max-height:0;overflow:hidden;
+  transition:max-height .35s cubic-bezier(.4,0,.2,1);
+}
+.faq-item.open .faq-a{max-height:300px}
+.faq-a-inner{padding:0 0 20px;font-size:13px;color:var(--text2);line-height:1.8}
+.faq-a-inner code{background:var(--bg3);padding:1px 6px;border-radius:3px;font-size:11px;color:var(--cyan)}
+
+/* ── Changelog ─────────────────────────────────────────── */
+#changelog{padding:100px 0;background:linear-gradient(180deg,transparent,rgba(88,101,242,.04),transparent)}
+.cl-list{display:flex;flex-direction:column;gap:24px;max-width:700px}
+.cl-item{
+  display:grid;grid-template-columns:110px 1fr;gap:24px;
+  border-bottom:1px solid var(--border);padding-bottom:24px;
+}
+.cl-item:last-child{border-bottom:none}
+.cl-version{
+  font-family:var(--sans);font-weight:800;font-size:14px;
+  color:var(--white);letter-spacing:-.01em;
+}
+.cl-version .cl-tag{
+  font-size:9px;padding:2px 7px;border-radius:3px;
+  letter-spacing:.06em;font-weight:700;margin-left:8px;
+  font-family:var(--mono);
+}
+.cl-tag.stable{background:rgba(61,220,132,.2);color:var(--green)}
+.cl-tag.legacy{background:rgba(255,255,255,.06);color:var(--text3)}
+.cl-date{font-size:11px;color:var(--text3);margin-top:4px;font-family:var(--mono)}
+.cl-notes{font-size:12px;color:var(--text2);line-height:1.8}
+.cl-notes li{list-style:none;padding-left:16px;position:relative}
+.cl-notes li::before{content:'→';position:absolute;left:0;color:var(--green);font-size:10px;top:3px}
+
+/* ── CTA ───────────────────────────────────────────────── */
+#cta{
+  padding:120px 0;text-align:center;
+  background:radial-gradient(ellipse 60% 80% at 50% 50%, rgba(61,220,132,.07) 0%, transparent 70%);
+}
+.cta-title{
+  font-family:var(--sans);font-size:clamp(36px,6vw,72px);
+  font-weight:800;color:var(--white);letter-spacing:-.04em;
+  line-height:1.05;margin-bottom:20px;
+}
+.cta-title span{color:var(--green)}
+.cta-desc{font-size:13px;color:var(--text2);max-width:440px;margin:0 auto 40px;line-height:1.8}
+.cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+
+/* ── Footer ────────────────────────────────────────────── */
+footer{
+  border-top:1px solid var(--border);
+  padding:40px 0;
+}
+.footer-inner{
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;
+}
+.footer-copy{font-size:11px;color:var(--text3)}
+.footer-links{display:flex;gap:24px}
+.footer-links a{font-size:11px;color:var(--text3);transition:color .2s}
+.footer-links a:hover{color:var(--green)}
+
+/* ── Animations ────────────────────────────────────────── */
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
+.fade-in.visible{opacity:1;transform:none}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media(max-width:768px){
+  nav{padding:0 20px}
+  .nav-links{display:none}
+  .container{padding:0 20px}
+  .config-grid{grid-template-columns:1fr}
+  .numbers-grid{grid-template-columns:repeat(2,1fr)}
+  .env-row{grid-template-columns:1fr;border-bottom:1px solid var(--border)}
+  .env-header{display:none}
+  .cl-item{grid-template-columns:1fr;gap:8px}
+  .footer-inner{flex-direction:column;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<!-- Ticker -->
+<div class="ticker">
+  <div class="ticker-inner" id="ticker">
+    <span>yKauttizBump v3.0.0 STABLE</span>
+    <span>multi-conta · multi-bot</span>
+    <span>jitter gaussiano</span>
+    <span>webhook Discord</span>
+    <span>log em arquivo</span>
+    <span>hot-reload config</span>
+    <span>confirmação de bump</span>
+    <span>discord.gg/PXBrrv9aGE</span>
+    <span>USE POR SUA CONTA E RISCO</span>
+    <span>suporte no servidor</span>
+    <span>yKauttizBump v3.0.0 STABLE</span>
+    <span>multi-conta · multi-bot</span>
+    <span>jitter gaussiano</span>
+    <span>webhook Discord</span>
+    <span>log em arquivo</span>
+    <span>hot-reload config</span>
+    <span>confirmação de bump</span>
+    <span>discord.gg/PXBrrv9aGE</span>
+    <span>USE POR SUA CONTA E RISCO</span>
+    <span>suporte no servidor</span>
+  </div>
+</div>
+
+<!-- Nav -->
+<nav>
+  <div class="nav-logo">
+    <span class="dot"></span>
+    yKauttizBump
+  </div>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#bots">Bots</a>
+    <a href="#config">Config</a>
+    <a href="#howto">Como usar</a>
+    <a href="#faq">FAQ</a>
+    <a href="#changelog">Changelog</a>
+  </div>
+  <a href="https://discord.gg/PXBrrv9aGE" target="_blank" class="nav-cta">Entrar no Servidor</a>
+</nav>
+
+<!-- Hero -->
+<section id="hero">
+  <div class="hero-badge">
+    <span class="live"></span>
+    v3.0.0 · Stable · Node.js ≥ 18
+  </div>
+  <h1 class="hero-title">yKauttiz<span class="accent">Bump</span></h1>
+  <p class="hero-sub">Auto Bump Bot para Discord</p>
+  <p class="hero-desc">
+    Bump automático no Disboard e outros bots — multi-conta, multi-bot,
+    com jitter gaussiano, confirmação de resposta, webhook e logs profissionais.
+  </p>
+  <div class="hero-btns">
+    <a href="https://discord.gg/PXBrrv9aGE" target="_blank" class="btn-primary">Obter o Bot →</a>
+    <a href="#howto" class="btn-ghost">Como usar</a>
+  </div>
+
+  <!-- Terminal -->
+  <div class="terminal-wrap">
+    <div class="term-bar">
+      <span class="term-dot r"></span>
+      <span class="term-dot y"></span>
+      <span class="term-dot g"></span>
+      <span class="term-title">yKauttizBump — terminal</span>
+    </div>
+    <div class="term-body">
+<div><span class="t-cyan">╔══════════════════════════════════════════════════════════════╗</span></div>
+<div><span class="t-cyan">║   yKauttizBump  —  Auto Bump Bot  v3.0.0                    ║</span></div>
+<div><span class="t-cyan">╚══════════════════════════════════════════════════════════════╝</span></div>
+<br/>
+<div><span class="t-blue">[INFO] </span><span class="t-white">Verificando servidor de suporte yKauttiz...</span></div>
+<div><span class="t-green">[OK]   </span><span class="t-white">Servidor de suporte: já membro ✓</span></div>
+<div><span class="t-blue">[INFO] </span><span class="t-white">Iniciado com <span class="t-yellow">2</span> conta(s) | Bots: <span class="t-green">disboard</span></span></div>
+<div><span class="t-blue">[INFO] </span><span class="t-white">Intervalo=<span class="t-yellow">135</span>min | Delay=<span class="t-yellow">5</span>s | Retries=<span class="t-yellow">3</span></span></div>
+<div class="t-dim">  ───────────────────────────────────────────────────────────</div>
+<div><span class="t-blue">[INFO] </span><span class="t-white">🔄 Ciclo <span class="t-yellow">#1</span> — <span class="t-dim">01/01/2025 12:00:02</span></span></div>
+<div><span class="t-blue">[INFO] </span><span class="t-white">👤 Processando conta: <span class="t-cyan">minha-conta (TOK1a2b3c...)</span></span></div>
+<div><span class="t-green">[OK]   </span><span class="t-white">📋 Disboard: bump enviado!</span></div>
+<div><span class="t-green">[OK]   </span><span class="t-white">Bump concluído! Conta: <span class="t-cyan">minha-conta</span> | Bots: <span class="t-green">Disboard</span></span></div>
+<div><span class="t-blue">[INFO] </span><span class="t-white">✅ Ciclo #1 concluído. Próximo bump em ~<span class="t-yellow">135</span> minuto(s)...</span></div>
+<br/>
+<div><span class="t-dim">&gt; </span><span class="cursor"></span></div>
+    </div>
+  </div>
+
+  <div class="hero-badges">
+    <span class="badge green">✓ Estável</span>
+    <span class="badge red">⚠ Use por sua conta e risco</span>
+    <span class="badge blue">Software Pago</span>
+    <span class="badge">Node.js ≥ 18</span>
+    <span class="badge">discord.js-selfbot-v13</span>
+  </div>
+</section>
+
+<!-- Features -->
+<section id="features">
+  <div class="container">
+    <div class="fade-in">
+      <p class="sec-label">Features</p>
+      <h2 class="sec-title">Tudo que você precisa<br/>para manter o bump ativo.</h2>
+      <p class="sec-desc">Construído do zero com atenção a cada detalhe — do jitter no cooldown até os logs no arquivo.</p>
+    </div>
+    <div class="features-grid fade-in">
+      <div class="feat-card">
+        <span class="feat-icon">🤖</span>
+        <div class="feat-title">Multi-Bot</div>
+        <div class="feat-desc">Suporte a Disboard, Bump.top, DiscordServers e Disforge. Configure quais bots usar por sessão no <code>config.json</code>.</div>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">👥</span>
+        <div class="feat-title">Multi-Conta</div>
+        <div class="feat-desc">Adicione quantas contas quiser em <code>accounts[]</code>. Cada conta tem label, token e canal próprios. Delay jitterizado entre cada uma.</div>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">🎲</span>
+        <div class="feat-title">Jitter Gaussiano</div>
+        <div class="feat-desc">Todos os delays usam distribuição gaussiana (Box-Muller). Nenhum intervalo é fixo — o timing parece comportamento humano real.</div>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">💬</span>
+        <div class="feat-title">Confirmação de Bump</div>
+        <div class="feat-desc">O bot escuta a resposta real do bot de bump antes de considerar o ciclo concluído. Fallback automático se a confirmação não chegar.</div>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">📡</span>
+        <div class="feat-title">Webhook Notificações</div>
+        <div class="feat-desc">Receba embeds no seu canal Discord após cada bump. Configure <code>webhookUrl</code> no config e nunca perca um evento.</div>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">📂</span>
+        <div class="feat-title">Log em Arquivo</div>
+        <div class="feat-desc">Ative <code>LOG_FILE=true</code> e todos os logs são salvos em <code>logs/bump-YYYY-MM-DD.log</code> com rotação diária automática.</div>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">🔄</span>
+        <div class="feat-title">Hot-Reload Config</div>
+        <div class="feat-desc">Mande <code>SIGUSR2</code> para o processo e o config.json é recarregado sem parar o bot. Zero downtime.</div>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">🛡️</span>
+        <div class="feat-title">Graceful Shutdown</div>
+        <div class="feat-desc">SIGINT, SIGTERM e SIGHUP são capturados. O bot aguarda o ciclo atual e imprime as estatísticas finais antes de sair.</div>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">📊</span>
+        <div class="feat-title">Estatísticas Detalhadas</div>
+        <div class="feat-desc">Taxa de sucesso por conta e por bot, uptime, duração do ciclo e último erro. Imprima a qualquer momento com <code>SIGUSR1</code>.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Bots -->
+<section id="bots">
+  <div class="container">
+    <div class="fade-in">
+      <p class="sec-label">Bots Suportados</p>
+      <h2 class="sec-title">Compatível com os<br/>principais bots de bump.</h2>
+      <p class="sec-desc">Configure quais bots usar em <code>settings.bumpBots</code>. Você pode usar múltiplos simultaneamente.</p>
+    </div>
+    <div class="bots-table-wrap fade-in">
+      <table>
+        <thead>
+          <tr>
+            <th>Bot</th>
+            <th>ID</th>
+            <th>Comando</th>
+            <th>Cooldown</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong style="color:var(--white)">Disboard</strong></td>
+            <td class="mono-text">302050872383242240</td>
+            <td class="mono-text">/bump</td>
+            <td>135 min</td>
+            <td><span class="tag stable">✓ Estável</span></td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--white)">Bump.top</strong></td>
+            <td class="mono-text">735147814878969968</td>
+            <td class="mono-text">/bump</td>
+            <td>60 min</td>
+            <td><span class="tag stable">✓ Estável</span></td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--white)">DiscordServers</strong></td>
+            <td class="mono-text">476303446547792897</td>
+            <td class="mono-text">/bump</td>
+            <td>120 min</td>
+            <td><span class="tag stable">✓ Estável</span></td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--white)">Disforge</strong></td>
+            <td class="mono-text">1109580315529682954</td>
+            <td class="mono-text">/bump</td>
+            <td>60 min</td>
+            <td><span class="tag stable">✓ Estável</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- Config -->
+<section id="config">
+  <div class="container">
+    <div class="fade-in">
+      <p class="sec-label">Configuração</p>
+      <h2 class="sec-title">Setup simples,<br/>controle total.</h2>
+      <p class="sec-desc">Dois arquivos. Tudo documentado com comentários inline.</p>
+    </div>
+    <div class="config-grid fade-in">
+      <div class="config-block">
+        <div class="config-header">
+          <span class="config-filename">config.json</span>
+          <button class="copy-btn" onclick="copyCode(this,'cfg')">copiar</button>
+        </div>
+        <pre id="cfg"><span class="t-dim">{</span>
+  <span class="key">"accounts"</span>: [
+    {
+      <span class="key">"token"</span>:     <span class="str">"SEU_TOKEN_AQUI"</span>,
+      <span class="key">"channelId"</span>: <span class="str">"ID_DO_CANAL"</span>,
+      <span class="key">"label"</span>:     <span class="str">"minha-conta"</span>
+    }
+  ],
+  <span class="key">"settings"</span>: {
+    <span class="key">"bumpInterval"</span>:          <span class="num">8100000</span>,
+    <span class="key">"delayBetweenAccounts"</span>:  <span class="num">5000</span>,
+    <span class="key">"maxRetries"</span>:            <span class="num">3</span>,
+    <span class="key">"retryDelay"</span>:            <span class="num">30000</span>,
+    <span class="key">"timeout"</span>:               <span class="num">30000</span>,
+    <span class="key">"confirmationTimeout"</span>:   <span class="num">15000</span>,
+    <span class="key">"bumpBots"</span>: [<span class="str">"disboard"</span>],
+    <span class="key">"webhookUrl"</span>:            <span class="kw">null</span>
+  }
+<span class="t-dim">}</span></pre>
+      </div>
+      <div class="config-block">
+        <div class="config-header">
+          <span class="config-filename">.env</span>
+          <button class="copy-btn" onclick="copyCode(this,'env-code')">copiar</button>
+        </div>
+        <pre id="env-code"><span class="cm"># Ativar logs detalhados</span>
+<span class="kw">DEBUG</span>=<span class="str">false</span>
+<span class="kw">LOG_LEVEL</span>=<span class="str">info</span>
+
+<span class="cm"># Salvar logs em arquivo</span>
+<span class="kw">LOG_FILE</span>=<span class="str">false</span>
+
+<span class="cm"># Conta via variável (opcional)</span>
+<span class="cm"># DISCORD_TOKEN=seu_token</span>
+<span class="cm"># DISCORD_CHANNEL_ID=id_canal</span>
+
+<span class="cm"># Webhook para notificações</span>
+<span class="cm"># WEBHOOK_URL=https://discord.com/</span>
+<span class="cm">#   api/webhooks/ID/TOKEN</span>
+
+<span class="cm"># Sobrescrever settings</span>
+<span class="cm"># BUMP_INTERVAL=8100000</span>
+<span class="cm"># DELAY_BETWEEN_ACCOUNTS=5000</span>
+<span class="cm"># MAX_RETRIES=3</span></pre>
+      </div>
+    </div>
+
+    <div class="fade-in" style="margin-top:56px">
+      <p class="sec-label" style="margin-bottom:20px">Variáveis de Ambiente</p>
+      <div class="env-table">
+        <div class="env-row env-header">
+          <div class="env-cell">variável</div>
+          <div class="env-cell">padrão</div>
+          <div class="env-cell">descrição</div>
+        </div>
+        <div class="env-row"><div class="env-cell">DEBUG</div><div class="env-cell default">false</div><div class="env-cell desc">Logs detalhados de depuração</div></div>
+        <div class="env-row"><div class="env-cell">LOG_LEVEL</div><div class="env-cell default">info</div><div class="env-cell desc">debug | info | warn | error</div></div>
+        <div class="env-row"><div class="env-cell">LOG_FILE</div><div class="env-cell default">false</div><div class="env-cell desc">Salva logs em logs/bump-YYYY-MM-DD.log</div></div>
+        <div class="env-row"><div class="env-cell">DISCORD_TOKEN</div><div class="env-cell default">—</div><div class="env-cell desc">Token de conta única (substitui config.json)</div></div>
+        <div class="env-row"><div class="env-cell">DISCORD_CHANNEL_ID</div><div class="env-cell default">—</div><div class="env-cell desc">Canal de conta única</div></div>
+        <div class="env-row"><div class="env-cell">WEBHOOK_URL</div><div class="env-cell default">—</div><div class="env-cell desc">URL de webhook para notificações</div></div>
+        <div class="env-row"><div class="env-cell">BUMP_INTERVAL</div><div class="env-cell default">8100000</div><div class="env-cell desc">Intervalo entre ciclos (ms)</div></div>
+        <div class="env-row"><div class="env-cell">MAX_RETRIES</div><div class="env-cell default">3</div><div class="env-cell desc">Tentativas por falha</div></div>
+        <div class="env-row"><div class="env-cell">TIMEOUT</div><div class="env-cell default">30000</div><div class="env-cell desc">Timeout de operação (ms)</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- How to -->
+<section id="howto">
+  <div class="container">
+    <div class="fade-in">
+      <p class="sec-label">Como usar</p>
+      <h2 class="sec-title">Rodando em<br/>4 passos.</h2>
+      <p class="sec-desc">Do zero ao bump automático em menos de 5 minutos.</p>
+    </div>
+    <div class="steps fade-in">
+      <div class="step">
+        <div class="step-num-col">
+          <div class="step-num">1</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-body">
+          <div class="step-title">Instale as dependências</div>
+          <div class="step-desc">Certifique-se de ter Node.js 18+ instalado. Clone ou baixe o projeto e instale os pacotes.</div>
+          <div class="step-code">$ npm install</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num-col">
+          <div class="step-num">2</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-body">
+          <div class="step-title">Configure o config.json</div>
+          <div class="step-desc">Substitua <code>DISCORD_TOKEN_AQUI</code> pelo token da sua conta e <code>CHANNEL_ID_AQUI</code> pelo ID do canal de bump. Adicione mais contas conforme necessário.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num-col">
+          <div class="step-num">3</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-body">
+          <div class="step-title">Configure o .env (opcional)</div>
+          <div class="step-desc">Copie o arquivo de exemplo e ajuste o nível de log, ative <code>LOG_FILE=true</code> ou adicione um webhook para notificações.</div>
+          <div class="step-code">$ cp .env.example .env</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num-col">
+          <div class="step-num">4</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-body">
+          <div class="step-title">Inicie o bot</div>
+          <div class="step-desc">O bot entra automaticamente no servidor de suporte, valida a configuração e começa o ciclo de bumps.</div>
+          <div class="step-code">$ npm start</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Numbers -->
+<section id="numbers">
+  <div class="container">
+    <div class="numbers-grid fade-in">
+      <div class="num-card">
+        <div class="num-value green" data-target="4">0</div>
+        <div class="num-label">Bots suportados</div>
+      </div>
+      <div class="num-card">
+        <div class="num-value blue" data-target="3">0</div>
+        <div class="num-label">Versões estáveis</div>
+      </div>
+      <div class="num-card">
+        <div class="num-value cyan" data-target="9">0</div>
+        <div class="num-label">Features novas v3</div>
+      </div>
+      <div class="num-card">
+        <div class="num-value" data-target="135">0</div>
+        <div class="num-label">Min cooldown Disboard</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="container">
+    <div class="fade-in">
+      <p class="sec-label">FAQ</p>
+      <h2 class="sec-title">Perguntas frequentes.</h2>
+    </div>
+    <div class="faq-list fade-in">
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Posso ser banido usando selfbot?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">
+            <strong>USE POR SUA CONTA E RISCO.</strong> O yKauttizBump usa uma conta de usuário comum para enviar slash commands — isso viola os Termos de Serviço do Discord. Banimentos são possíveis, embora raros em contas que usam apenas o bump. Recomendamos fortemente o uso em <strong>contas secundárias</strong>, nunca na conta principal.
+          </div>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Como obtenho o token da minha conta Discord?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">
+            Abra o Discord no <strong>navegador</strong> (não no app), pressione <code>F12</code>, vá na aba <strong>Network</strong>, filtre por <code>api/v9</code>, faça qualquer ação (trocar de canal) e procure o header <code>Authorization</code> em qualquer request. <strong>Nunca compartilhe seu token.</strong>
+          </div>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          O que é o jitter gaussiano e por que importa?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">
+            Delays fixos criam um padrão previsível (fingerprint) que sistemas automatizados detectam facilmente. O jitter gaussiano aplica uma variação aleatória com distribuição normal (campânula) ao redor do valor configurado — o intervalo entre bumps nunca é exatamente o mesmo, imitando comportamento humano.
+          </div>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Posso usar múltiplas contas com bots diferentes?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">
+            Sim. Configure quantas contas quiser em <code>accounts[]</code>. Para cada ciclo, todas as contas são processadas em sequência. Cada conta tenta fazer bump em todos os bots configurados em <code>settings.bumpBots</code>. O cooldown é rastreado por token individualmente.
+          </div>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Como funciona a confirmação de bump?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">
+            Após enviar o slash command, o bot escuta mensagens do bot de bump no canal por até <code>confirmationTimeout</code> ms (padrão: 15s). Se uma resposta com palavras como "bump done" ou "bumped" for detectada, o bump é confirmado. Se não chegar dentro do timeout, o bump é contabilizado como enviado mesmo assim (o comando pode ter funcionado sem resposta visível).
+          </div>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Como funciona o servidor obrigatório?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">
+            Na inicialização, o yKauttizBump usa o token da primeira conta para verificar se ela já é membro do servidor <strong>discord.gg/PXBrrv9aGE</strong>. Se não for, entra automaticamente via invite. Isso é necessário para suporte e updates. Se a entrada falhar, o bot continua normalmente e exibe um aviso para entrar manualmente.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Changelog -->
+<section id="changelog">
+  <div class="container">
+    <div class="fade-in">
+      <p class="sec-label">Changelog</p>
+      <h2 class="sec-title">Histórico de versões.</h2>
+    </div>
+    <div class="cl-list fade-in">
+      <div class="cl-item">
+        <div>
+          <div class="cl-version">v3.0.0 <span class="cl-tag stable">STABLE</span></div>
+          <div class="cl-date">2025</div>
+        </div>
+        <ul class="cl-notes">
+          <li>Suporte a multi-bot: Disboard, Bump.top, DiscordServers, Disforge</li>
+          <li>Confirmação de bump via listener de mensagem</li>
+          <li>Webhook Discord para notificações de sucesso e falha</li>
+          <li>Jitter gaussiano (Box-Muller) em todos os delays</li>
+          <li>Labels de conta para logs mais legíveis</li>
+          <li>Log em arquivo com rotação diária (LOG_FILE=true)</li>
+          <li>Hot-reload de config via SIGUSR2</li>
+          <li>Auto-join do servidor de suporte yKauttiz</li>
+          <li>Estatísticas por bot no monitor</li>
+        </ul>
+      </div>
+      <div class="cl-item">
+        <div>
+          <div class="cl-version">v2.0.0 <span class="cl-tag legacy">LEGACY</span></div>
+          <div class="cl-date">2025</div>
+        </div>
+        <ul class="cl-notes">
+          <li>Retry automático com delay configurável</li>
+          <li>Rate limiter por token</li>
+          <li>Graceful shutdown (SIGINT, SIGTERM, SIGHUP)</li>
+          <li>Monitor de estatísticas com SIGUSR1</li>
+        </ul>
+      </div>
+      <div class="cl-item">
+        <div>
+          <div class="cl-version">v1.0.0 <span class="cl-tag legacy">LEGACY</span></div>
+          <div class="cl-date">2025</div>
+        </div>
+        <ul class="cl-notes">
+          <li>Versão inicial com bump básico via Disboard</li>
+          <li>Suporte a múltiplas contas</li>
+          <li>Loop com intervalo configurável</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <div class="container">
+    <div class="fade-in">
+      <h2 class="cta-title">Pronto para deixar<br/>o servidor no <span>topo</span>?</h2>
+      <p class="cta-desc">Entre no servidor do Discord para obter o yKauttizBump, tirar dúvidas e receber updates.</p>
+      <div class="cta-btns">
+        <a href="https://discord.gg/PXBrrv9aGE" target="_blank" class="btn-primary">Entrar no Servidor →</a>
+        <a href="#howto" class="btn-ghost">Ver como usar</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-copy">© 2025 yKauttiz · Todos os direitos reservados · discord.gg/PXBrrv9aGE</div>
+      <div class="footer-links">
+        <a href="https://discord.gg/PXBrrv9aGE" target="_blank">Servidor</a>
+        <a href="#features">Features</a>
+        <a href="#changelog">Changelog</a>
+        <a href="#faq">FAQ</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Fade in on scroll
+const fadeEls = document.querySelectorAll('.fade-in');
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+      obs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+fadeEls.forEach(el => obs.observe(el));
+
+// Counter animation
+const numEls = document.querySelectorAll('[data-target]');
+const numObs = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    const el = entry.target;
+    const target = parseInt(el.dataset.target);
+    const dur = 1200;
+    const start = performance.now();
+    function tick(now) {
+      const prog = Math.min((now - start) / dur, 1);
+      const ease = 1 - Math.pow(1 - prog, 3);
+      el.textContent = Math.round(ease * target);
+      if (prog < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+    numObs.unobserve(el);
+  });
+}, { threshold: 0.5 });
+numEls.forEach(el => numObs.observe(el));
+
+// FAQ toggle
+function toggleFaq(btn) {
+  const item = btn.closest('.faq-item');
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+
+// Copy code
+function copyCode(btn, id) {
+  const pre = document.getElementById(id);
+  const text = pre.innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'copiado!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'copiar'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+// Smooth active nav on scroll
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => {
+    if (window.scrollY >= s.offsetTop - 120) current = s.id;
+  });
+  navLinks.forEach(a => {
+    a.style.color = a.getAttribute('href') === '#' + current ? 'var(--green)' : '';
+  });
+}, { passive: true });
+</script>
+</body>
+</html>
