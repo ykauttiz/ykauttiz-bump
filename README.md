@@ -2,109 +2,112 @@
 
 <br/>
 
-```
-██╗   ██╗██╗  ██╗ █████╗ ██╗   ██╗████████╗████████╗██╗███████╗    ██████╗ ██╗   ██╗███╗   ███╗██████╗
-╚██╗ ██╔╝██║ ██╔╝██╔══██╗██║   ██║╚══██╔══╝╚══██╔══╝██║╚══███╔╝    ██╔══██╗██║   ██║████╗ ████║██╔══██╗
- ╚████╔╝ █████╔╝ ███████║██║   ██║   ██║      ██║   ██║  ███╔╝     ██████╔╝██║   ██║██╔████╔██║██████╔╝
-  ╚██╔╝  ██╔═██╗ ██╔══██║██║   ██║   ██║      ██║   ██║ ███╔╝      ██╔══██╗██║   ██║██║╚██╔╝██║██╔═══╝
-   ██║   ██║  ██╗██║  ██║╚██████╔╝   ██║      ██║   ██║███████╗    ██████╔╝╚██████╔╝██║ ╚═╝ ██║██║
-   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝    ╚═╝      ╚═╝   ╚═╝╚══════╝    ╚═════╝  ╚═════╝ ╚═╝     ╚═╝╚═╝
-```
-
-<img src="https://img.shields.io/badge/STATUS-ESTÁVEL-57F287?style=for-the-badge&labelColor=0d0d0d"/>
-<img src="https://img.shields.io/badge/LICENÇA-PROPRIETÁRIA-ED4245?style=for-the-badge&labelColor=0d0d0d"/>
-<img src="https://img.shields.io/badge/NODE-≥%2018.0.0-5865F2?style=for-the-badge&logo=node.js&logoColor=white&labelColor=0d0d0d"/>
-<img src="https://img.shields.io/badge/SUPORTE-DISCORD-5865F2?style=for-the-badge&logo=discord&logoColor=white&labelColor=0d0d0d"/>
+<img src="https://img.shields.io/badge/yKauttizBump-Bot%20de%20Bump%20Automático-57F287?style=for-the-badge&labelColor=0d0d0d"/>
 
 <br/><br/>
 
-> **Bot de bump automático para Discord.**
-> Multi-conta · 6 bots de listing · Jitter anti-detecção · Webhook · Logs profissionais.
+<img src="https://img.shields.io/badge/STATUS-ESTÁVEL-57F287?style=for-the-badge&labelColor=0d0d0d"/>
+<img src="https://img.shields.io/badge/LICENÇA-PROPRIETÁRIA-ED4245?style=for-the-badge&labelColor=0d0d0d"/>
+<img src="https://img.shields.io/badge/NODE.JS-≥%2018.0.0-339933?style=for-the-badge&logo=nodedotjs&logoColor=white&labelColor=0d0d0d"/>
+<img src="https://img.shields.io/badge/SUPORTE-DISCORD-5865F2?style=for-the-badge&logo=discord&logoColor=white&labelColor=0d0d0d"/>
+<img src="https://img.shields.io/badge/PREÇO-R%24%2020,00-FEE75C?style=for-the-badge&labelColor=0d0d0d"/>
 
-**[→ Obter acesso](https://discord.gg/PXBrrv9aGE)** · **[→ Suporte](https://discord.gg/PXBrrv9aGE)** · **[→ Updates](https://discord.gg/PXBrrv9aGE)**
+<br/><br/>
+
+```
+╔══════════════════════════════════════════════════════╗
+║           yKauttizBump — Auto Bump Bot               ║
+║  © yKauttiz — Todos os direitos reservados.          ║
+║  Software pago. Redistribuição proibida.              ║
+║  Suporte: discord.gg/PXBrrv9aGE                      ║
+╚══════════════════════════════════════════════════════╝
+```
+
+**Bot de bump automático para o Disboard — multi-conta, jitter gaussiano anti-detecção,
+webhook Discord, logs profissionais e setup em 3 minutos.**
+
+[**→ Obter Acesso — R$ 20,00**](https://discord.gg/PXBrrv9aGE) &nbsp;·&nbsp;
+[**→ Suporte**](https://discord.gg/PXBrrv9aGE) &nbsp;·&nbsp;
+[**→ Updates privados**](https://discord.gg/PXBrrv9aGE)
 
 </div>
 
 ---
 
-## ⚠️ Aviso Legal
+## ⚠️ Aviso Importante
 
-> Este software opera como **selfbot** — utiliza tokens de contas de usuário comuns para automação, o que **viola os Termos de Serviço do Discord**.
-> O uso é de **inteira responsabilidade do cliente**. yKauttiz não se responsabiliza por banimentos, suspensões ou qualquer penalidade aplicada pelo Discord.
-> **Recomendamos fortemente o uso exclusivo em contas secundárias.**
+> Este software opera como **selfbot** — usa um token de conta de usuário comum para automação,
+> o que **viola os Termos de Serviço do Discord**.
+> O uso é de **inteira responsabilidade do cliente**.
+> yKauttiz não se responsabiliza por banimentos ou penalidades.
+> **Use exclusivamente em contas secundárias.**
 
 ---
 
 ## O que é o yKauttizBump
 
-O **yKauttizBump** automatiza o bump do seu servidor em até **6 plataformas de listing** simultaneamente, com múltiplas contas, delays com distribuição gaussiana para anti-detecção, confirmação real de bump por resposta do bot, notificações via webhook e logs salvos em arquivo.
+Automatiza o bump do seu servidor no **Disboard** — a maior plataforma de listing de servidores Discord — sem você precisar fazer nada manualmente.
 
-Enquanto a maioria dos bots gratuitos faz bump apenas no Disboard com delay fixo e sem qualquer proteção, o yKauttizBump foi construído para ser **discreto, confiável e profissional**.
+**Por que pagar R$ 20,00?**
 
----
-
-## Bots de Listing Suportados
-
-| Bot | Plataforma | Cooldown | Status |
-|-----|-----------|---------|--------|
-| **Disboard** | disboard.org | 135 min | ✅ Suportado |
-| **Bump.top** | bump.top | 60 min | ✅ Suportado |
-| **DiscordServers** | discordservers.com | 120 min | ✅ Suportado |
-| **Disforge** | disforge.com | 60 min | ✅ Suportado |
-| **Infinity List** | infinitybots.gg | 120 min | ✅ Suportado |
-| **Blist** | blist.xyz | 120 min | ✅ Suportado |
-
-Configure quais bots usar em `config.json → settings.bumpBots`. Você pode usar múltiplos ao mesmo tempo.
+Bots gratuitos usam delay fixo (facilmente detectável), não têm retry, travam silenciosamente e não confirmam se o bump funcionou. O yKauttizBump foi construído para ser confiável, discreto e simples de usar.
 
 ---
 
-## Diferenciais
+## Funcionalidades
 
-**Jitter gaussiano em todos os delays**
-Nenhum intervalo é fixo. Cada sleep usa distribuição Box-Muller com ±5–15% de variação — o timing imita comportamento humano e não cria fingerprint de sessão.
+**🎲 Jitter gaussiano anti-detecção**
+Todos os delays usam distribuição gaussiana (Box-Muller) com variação de ±5–15%. Nenhum intervalo é igual — o bot imita comportamento humano e não cria padrão detectável.
 
-**Confirmação real de bump**
-Após enviar o comando slash, o bot escuta a mensagem de resposta do bot de listing. Se confirmado, registra o sucesso. Se não chegar em 15s, contabiliza como enviado mesmo assim (o comando pode ter funcionado sem resposta visível).
+**✅ Confirmação real de bump**
+Após enviar o comando, o bot escuta a resposta do Disboard por até 15 segundos. Se confirmado, registra sucesso. Se não chegar, ainda contabiliza o envio.
 
-**Multi-conta com delay jitterizado**
-Adicione quantas contas quiser. Cada conta tem seu próprio cooldown rastreado por token. O delay entre contas também é gaussiano.
+**👥 Multi-conta**
+Adicione quantas contas quiser. Cada conta tem cooldown rastreado individualmente por token.
 
-**Hot-reload sem downtime**
-Edite o `config.json` e mande `kill -USR2 <PID>` — o config é recarregado sem parar o bot.
+**📡 Webhook Discord**
+Configure um webhook e receba embed no seu canal a cada bump — com conta, horário e status.
 
-**Webhook Discord**
-Configure uma URL de webhook e receba embeds formatados no seu canal a cada bump — sucesso ou falha.
+**📂 Log em arquivo**
+Ative `LOG_FILE=true` e os logs são salvos em `logs/bump-YYYY-MM-DD.log` com rotação diária.
 
-**Log em arquivo**
-Ative `LOG_FILE=true` e todos os logs são salvos em `logs/bump-YYYY-MM-DD.log` com rotação diária automática.
+**🔄 Hot-reload de config**
+Edite o `config.json` e execute `kill -USR2 <PID>` — config recarregado sem parar o bot.
+
+**🛡️ Graceful shutdown**
+`Ctrl+C` aguarda o ciclo atual, imprime as estatísticas finais e encerra limpo.
+
+**📊 Estatísticas detalhadas**
+Taxa de sucesso por conta, uptime, duração do ciclo, último erro. Use `kill -USR1 <PID>` a qualquer momento.
 
 ---
 
-## Arquivos do Projeto
+## Estrutura de Arquivos
 
 ```
 yKauttizBump/
-├── index.js              ← Inicie o bot com: node index.js
+├── index.js              ← Ponto de entrada — rode com: node index.js
 ├── config.json           ← EDITE AQUI: suas contas e configurações
 ├── .env.example          ← Copie para .env e ajuste se necessário
 ├── package.json
+├── .gitignore
 ├── services/
-│   ├── bumper.js         ← Lógica de bump (6 bots, retry, confirmação)
-│   ├── monitor.js        ← Estatísticas em tempo real
+│   ├── bumper.js         ← Lógica principal de bump (retry + confirmação)
+│   ├── monitor.js        ← Estatísticas e monitoramento
 │   ├── serverJoin.js     ← Auto-join do servidor de suporte
 │   └── webhook.js        ← Notificações Discord
 └── utils/
-    ├── logger.js         ← Logs coloridos + arquivo
-    ├── rateLimiter.js    ← Cooldown por token com jitter
-    ├── shutdown.js       ← Graceful shutdown
-    └── validator.js      ← Validação do config.json
+    ├── logger.js         ← Logs coloridos com suporte a arquivo
+    ├── rateLimiter.js    ← Cooldown por token com jitter gaussiano
+    ├── shutdown.js       ← Graceful shutdown (SIGINT, SIGTERM, SIGHUP)
+    └── validator.js      ← Validação do config.json com mensagens claras
 ```
 
 ---
 
 ## Instalação
 
-**Requisito:** Node.js versão 18 ou superior — [nodejs.org](https://nodejs.org)
+**Requisito:** Node.js 18 ou superior — [nodejs.org](https://nodejs.org)
 
 **1. Instale as dependências**
 
@@ -114,7 +117,7 @@ npm install
 
 **2. Configure o `config.json`**
 
-Abra o arquivo `config.json` e preencha:
+Abra o arquivo `config.json` e preencha com seus dados:
 
 ```json
 {
@@ -130,23 +133,19 @@ Abra o arquivo `config.json` e preencha:
     "delayBetweenAccounts": 5000,
     "maxRetries":           3,
     "retryDelay":           30000,
-    "timeout":              30000,
-    "bumpBots":             ["disboard"],
+    "timeout":              35000,
     "webhookUrl":           null
   }
 }
 ```
 
-Para usar múltiplas contas, adicione mais objetos em `accounts[]`.
-Para usar múltiplos bots, adicione ao array: `["disboard", "bumptop", "discordservers"]`.
+Para usar **múltiplas contas**, adicione mais objetos no array `accounts`.
 
 **3. (Opcional) Configure o `.env`**
 
 ```bash
 cp .env.example .env
 ```
-
-Edite o `.env` para ajustar o nível de log, ativar log em arquivo ou adicionar webhook.
 
 **4. Inicie**
 
@@ -156,117 +155,106 @@ node index.js
 
 ---
 
-## Referência de Configuração
-
-### config.json
+## Referência Completa — config.json
 
 | Campo | Tipo | Padrão | Descrição |
 |-------|------|--------|-----------|
 | `accounts[].token` | string | — | Token da conta Discord |
-| `accounts[].channelId` | string | — | ID do canal onde o bump é feito |
-| `accounts[].label` | string | `""` | Nome para identificação nos logs |
-| `settings.bumpInterval` | number | `8100000` | Intervalo entre ciclos em ms (135 min) |
+| `accounts[].channelId` | string | — | ID do canal de bump (só números) |
+| `accounts[].label` | string | `""` | Nome amigável nos logs |
+| `settings.bumpInterval` | number | `8100000` | Intervalo entre ciclos em ms (135 min = cooldown Disboard) |
 | `settings.delayBetweenAccounts` | number | `5000` | Delay entre contas em ms |
 | `settings.maxRetries` | number | `3` | Tentativas por falha |
 | `settings.retryDelay` | number | `30000` | Espera entre tentativas em ms |
-| `settings.timeout` | number | `30000` | Timeout de cada operação em ms |
-| `settings.bumpBots` | string[] | `["disboard"]` | Bots a usar |
+| `settings.timeout` | number | `35000` | Timeout de cada operação em ms |
 | `settings.webhookUrl` | string\|null | `null` | URL de webhook para notificações |
 
-**Valores válidos para `bumpBots`:** `disboard`, `bumptop`, `discordservers`, `disforge`, `infinity`, `blist`
-
-### .env
+## Referência Completa — .env
 
 | Variável | Padrão | Descrição |
 |----------|--------|-----------|
-| `LOG_LEVEL` | `info` | `debug` \| `info` \| `warn` \| `error` |
+| `LOG_LEVEL` | `info` | Nível de log: `debug` \| `info` \| `warn` \| `error` |
 | `LOG_FILE` | `false` | `true` para salvar logs em arquivo |
-| `WEBHOOK_URL` | — | URL de webhook (alternativa ao config.json) |
+| `WEBHOOK_URL` | — | Alternativa ao `webhookUrl` do config |
 | `DEBUG` | `false` | Logs detalhados de depuração |
 
 ---
 
-## Como obter o token Discord
+## Como Obter o Token Discord
 
-> ⚠️ Nunca compartilhe seu token. Quem tiver o token tem **acesso total** à conta.
+> ⚠️ Nunca compartilhe seu token. Acesso total à conta.
 
-1. Abra o Discord no **navegador** (não no app)
+1. Abra o Discord no **navegador** (não no app desktop)
 2. Pressione `F12` → aba **Network**
 3. Filtre por `api/v9`
-4. Troque de canal ou envie uma mensagem
-5. Clique em qualquer request → procure o header `Authorization`
+4. Troque de canal ou envie qualquer mensagem
+5. Clique em qualquer request → procure o header **`Authorization`**
 
 ---
 
-## Comandos Úteis
+## Comandos
 
-| Comando | Descrição |
-|---------|-----------|
-| `node index.js` | Inicia o bot |
-| `Ctrl+C` | Encerra graciosamente (imprime estatísticas) |
-| `kill -USR1 <PID>` | Imprime estatísticas sem parar |
-| `kill -USR2 <PID>` | Recarrega o config.json sem parar |
+| Ação | Comando |
+|------|---------|
+| Iniciar o bot | `node index.js` |
+| Encerrar (gracioso) | `Ctrl+C` |
+| Ver estatísticas | `kill -USR1 $(pgrep -f index.js)` |
+| Recarregar config | `kill -USR2 $(pgrep -f index.js)` |
 
 ---
 
 ## Solução de Problemas
 
-| Problema | Causa | Solução |
-|----------|-------|---------|
-| `Login falhou` | Token inválido ou expirado | Obtenha um novo token |
-| `Canal não encontrado` | channelId errado ou sem acesso | Verifique o ID e as permissões |
-| `Cooldown ativo` | Bump feito há pouco tempo | Aguarde o intervalo configurado |
-| `Timeout` | Conexão lenta ou Discord instável | Aumente `timeout` no config |
-| `Bot inválido` | Nome de bot com erro de digitação | Use exatamente: `disboard`, `bumptop`, etc. |
+| Problema | Causa Provável | Solução |
+|----------|---------------|---------|
+| `Login falhou` | Token inválido ou expirado | Gere um novo token |
+| `Canal não encontrado` | channelId errado | Verifique o ID — deve ter 17-20 dígitos |
+| `Cooldown ativo` | Bump muito recente | Aguarde o intervalo configurado |
+| `Timeout após Xs` | Conexão lenta | Aumente `timeout` no config.json |
+| `Todas as tentativas falharam` | Disboard offline ou sem permissão | Verifique se o Disboard está no servidor |
 
 ---
 
 ## Suporte e Atualizações
 
-Todo o suporte é prestado **exclusivamente pelo Discord**.
+Todo o suporte é feito **exclusivamente via Discord**.
 
-As atualizações são distribuídas automaticamente em um **canal privado para clientes** no servidor — sem necessidade de baixar nada manualmente. Você será notificado no canal assim que uma nova versão estiver disponível.
+Novas versões são distribuídas em um **canal privado exclusivo para clientes** — você recebe notificação assim que uma atualização estiver disponível. Sem necessidade de baixar nada manualmente.
 
 **Servidor oficial:** [discord.gg/PXBrrv9aGE](https://discord.gg/PXBrrv9aGE)
 
 ---
 
-## Copyright e Licença
+<br/>
+
+<div align="center">
 
 ```
 ╔══════════════════════════════════════════════════════════════════════════════╗
 ║                                                                              ║
-║   yKauttizBump — Auto Bump Bot para Discord                                  ║
-║   © yKauttiz. Todos os direitos reservados.                                  ║
+║                    © yKauttiz — TODOS OS DIREITOS RESERVADOS                 ║
 ║                                                                              ║
-║   Este software é de propriedade exclusiva de yKauttiz e protegido por       ║
-║   direitos autorais. A licença é pessoal, intransferível e não exclusiva.    ║
+║   Este software é propriedade exclusiva de yKauttiz e está protegido por    ║
+║   direitos autorais. A licença concedida ao cliente é pessoal,               ║
+║   intransferível e não exclusiva.                                            ║
 ║                                                                              ║
-║   É ESTRITAMENTE PROIBIDO:                                                   ║
-║     × Redistribuir, compartilhar ou revender este software                   ║
-║     × Remover ou alterar avisos de copyright ou autoria                      ║
-║     × Criar forks ou versões derivadas sem autorização por escrito           ║
-║     × Usar o código como base para outros projetos                           ║
-║     × Contornar qualquer mecanismo de proteção ou verificação                ║
+║   ✗  Proibido redistribuir, compartilhar ou revender                         ║
+║   ✗  Proibido remover ou alterar avisos de copyright                         ║
+║   ✗  Proibido criar versões derivadas sem autorização escrita                ║
+║   ✗  Proibido usar como base para outros projetos                            ║
+║   ✗  Proibido contornar qualquer proteção do software                        ║
 ║                                                                              ║
-║   É PERMITIDO:                                                               ║
-║     ✓ Uso pessoal pelo cliente licenciado                                    ║
-║     ✓ Executar em seus próprios servidores e contas autorizadas              ║
+║   ✓  Uso pessoal pelo cliente licenciado                                     ║
+║   ✓  Execução em suas próprias contas autorizadas                            ║
 ║                                                                              ║
-║   Violações desta licença estão sujeitas a medidas legais cabíveis.         ║
+║   Versões legítimas SEMPRE contêm: yKauttiz · discord.gg/PXBrrv9aGE         ║
 ║                                                                              ║
-║   Versões legítimas SEMPRE contêm:                                           ║
-║     → yKauttiz                                                               ║
-║     → discord.gg/PXBrrv9aGE                                                  ║
+║   Violações estão sujeitas a medidas legais.                                 ║
 ║                                                                              ║
-║   Servidor oficial : discord.gg/PXBrrv9aGE                                  ║
-║   Servidor ID      : 1356778105737580554                                     ║
-║   Contato          : Discord — yKauttiz                                      ║
+║   discord.gg/PXBrrv9aGE  ·  Servidor ID: 1356778105737580554                ║
 ║                                                                              ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 ```
-
-<div align="center">
 
 Feito com 💜 por **yKauttiz** · [discord.gg/PXBrrv9aGE](https://discord.gg/PXBrrv9aGE)
 
